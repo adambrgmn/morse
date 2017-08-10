@@ -3,63 +3,62 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
-import R from 'ramda';
 
 // prettier-ignore
 const MorseUnit = styled.div`
+  position: relative;
   display: inline-block;
   width: 1em;
   height: 1em;
-  margin: 1em 0;
   margin-right: 1em;
+  border-radius: 100%;
   background-color: #363636;
 
-  ${props => props.long && css`
+  &:last-child { margin-right: 0; }
+
+  ${props => props.unit === '-' && css`
     width: 3em;
+    border-radius: 0;
+  `}
+`;
+
+// prettier-ignore
+const MorseBreak = styled(MorseUnit)`
+  width: 3em;
+  background-color: transparent;
+
+  ${props => props.long && css`
+    width: 7em;
   `}
 
-  ${props => props.break && css`
-    position: relative;
-    background-color: transparent;
-
-    &::before {
-      content: '';
-      position: absolute;
-      top: 0.25em;
-      right: 0.25em;
-      width: calc(100% - 0.5em);
-      height: calc(100% - 0.5em);
-      background-color: ${() => props.showBreakChars ? '#eee' : 'transparent'};
-  `}
-
-  &:last-child {
-    margin-right: 0;
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0.25em;
+    left: 0.25em;
+    width: calc(100% - 0.5em);
+    height: calc(100% - 0.5em);
+    background-color: #eee;
   }
 `;
 
-type Props = {
-  morseString: string,
-  showBreakChars: boolean,
-};
-
-const createElement = R.curry(R.nAry(2, React.createElement));
-
-const buildUnits = showBreakChars => R.pipe(
-  R.match(/(\.|-|\s+)/g),
-  R.map(
-    R.applySpec({
-      key: Math.random,
-      long: R.anyPass([R.equals('-'), R.equals('  ')]),
-      break: R.test(/\s/),
-      showBreakChars: R.always(showBreakChars),
-    }),
-  ),
-  R.map(createElement(MorseUnit)),
-);
-
-const Morse = ({ morseString, showBreakChars }: Props) =>
+const Morse = ({ morse }) =>
   <div>
-    {buildUnits(showBreakChars)(morseString)}
+    {morse.map(entity => {
+      switch (entity.type) {
+        case 'break':
+          return <MorseBreak key={entity.id} long={entity.long} />;
+
+        case 'char':
+          const units = entity.code.split('');
+          return units.map((unit, i) =>
+            <MorseUnit key={entity.id + i} unit={unit} />,
+          );
+
+        default:
+          return null;
+      }
+    })}
   </div>;
 
 const mapStateToProps = state => state;

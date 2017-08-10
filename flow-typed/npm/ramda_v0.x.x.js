@@ -545,6 +545,8 @@ declare module ramda {
   lensPath
   lensProp
   */
+  declare function lensIndex(...any): any;
+  declare function lensPath(...any): any;
   declare function lensProp(...any): any;
 
   declare function mapObjIndexed<A,B>(fn: (val: A, key: string, o: Object) => B, o: {[key: string]: A}): {[key: string]: B};
