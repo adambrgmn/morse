@@ -10,7 +10,6 @@ import {
   newWord,
   back,
   clear,
-  toggleBreakchar,
 } from '../../reducer';
 
 const Button = styled.button`
@@ -63,9 +62,6 @@ const Buttons = ({ dispatch }) =>
     </Button>
     <Button type="button" onClick={() => dispatch(clear())}>
       Clear
-    </Button>
-    <Button type="button" onClick={() => dispatch(toggleBreakchar())}>
-      Toggle break charachters
     </Button>
   </div>;
 

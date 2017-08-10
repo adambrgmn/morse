@@ -5,6 +5,19 @@ import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 
 // prettier-ignore
+const MorseChar = styled.div`
+  display: inline-block;
+  margin-right: 1em;
+  margin-bottom: 1em;
+
+  &:last-child { margin-right: 0; }
+
+  ${props => props.highlight && css`
+    & div { background-color: #00f; }
+  `}
+`;
+
+// prettier-ignore
 const MorseUnit = styled.div`
   position: relative;
   display: inline-block;
@@ -42,7 +55,7 @@ const MorseBreak = styled(MorseUnit)`
   }
 `;
 
-const Morse = ({ morse }) =>
+const Morse = ({ morse, highlight }) =>
   <div>
     {morse.map(entity => {
       switch (entity.type) {
@@ -51,9 +64,16 @@ const Morse = ({ morse }) =>
 
         case 'char':
           const units = entity.code.split('');
-          return units.map((unit, i) =>
-            <MorseUnit key={entity.id + i} unit={unit} />,
+          return (
+            <MorseChar key={entity.id} highlight={entity.id === highlight}>
+              {units.map((unit, i) =>
+                <MorseUnit key={entity.id + i} unit={unit} />,
+              )}
+            </MorseChar>
           );
+        // return units.map((unit, i) =>
+        //   <MorseUnit key={entity.id + i} unit={unit} />,
+        // );
 
         default:
           return null;

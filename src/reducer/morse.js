@@ -27,7 +27,11 @@ const initialState = [
 const createNewCharObj = code => ({ id: uuid(), type: 'char', code });
 const createNewBreakObj = long => ({ id: uuid(), type: 'break', long });
 
-const lastIsBreak = R.pipe(R.last, R.propOr('break', 'type'), R.equals('break'));
+const lastIsBreak = R.pipe(
+  R.last,
+  R.propOr('break', 'type'),
+  R.equals('break'),
+);
 const lastIsEmpty = R.pipe(R.last, R.prop('code'), R.isEmpty);
 
 const addNewCharObj = char => R.append(createNewCharObj(char));
@@ -40,7 +44,7 @@ const addChar = char =>
     [R.T, updateLastChar(R.flip(R.concat)(char))],
   ]);
 
-const addNewCharBreakObj = R.append(createNewBreakObj(false));
+const addNewCharBreakObj = arr => R.append(createNewBreakObj(false), arr);
 const updateLastCharBreak = R.over(
   R.lensIndex(-1),
   R.over(R.lensProp('long'), R.T),
