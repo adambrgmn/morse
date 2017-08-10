@@ -1,28 +1,36 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 
-import translationMap from './translationMap';
+import { toChar } from '../../utils/translationMap';
 import { highlightId, resetHighlight } from '../../reducer';
 
 const TranslationContainer = styled.p`
   font-size: 3rem;
-  font-family: 'Roboto Mono', monospace;
+  font-family: ${props => props.theme.font};
   line-height: 1;
-  text-transform: uppercase;
+  letter-spacing: 0.1em;
 `;
 
-const Translation = ({ morse, dispatch }) =>
+const TranslationChar = styled.span`
+  cursor: default;
+  transition: ${({ theme }) => theme.transition('color')};
+
+  ${props => props.highlight && css`color: ${props.theme.color.brand};`}
+`;
+
+const Translation = ({ morse, highlight, dispatch }) =>
   <TranslationContainer>
     {morse.map(entity =>
-      <span
+      <TranslationChar
         key={entity.id}
         onMouseEnter={() => dispatch(highlightId(entity.id))}
-        onMouseLeave={() => dispatch(resetHighlight())}>
+        onMouseLeave={() => dispatch(resetHighlight())}
+        highlight={highlight === entity.id}>
         {entity.type === 'char'
-          ? translationMap(entity.code)
+          ? toChar(entity.code)
           : entity.long ? ' ' : ''}
-      </span>,
+      </TranslationChar>,
     )}
   </TranslationContainer>;
 

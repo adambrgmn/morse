@@ -5,8 +5,8 @@ const Container = styled.div`width: 12.5rem;`;
 
 const Svg = styled.svg`
   display: block;
-  fill: #363636;
-  stroke: #363636;
+  fill: ${({ theme }) => theme.color.black};
+  stroke: ${({ theme }) => theme.color.black};
   stroke-width: 1;
 `
 

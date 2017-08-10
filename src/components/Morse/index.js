@@ -4,16 +4,16 @@ import React from 'react';
 import styled, { css } from 'styled-components';
 import { connect } from 'react-redux';
 
+import { highlightId, resetHighlight } from '../../reducer';
+
 // prettier-ignore
 const MorseChar = styled.div`
   display: inline-block;
   margin-right: 1em;
-  margin-bottom: 1em;
-
   &:last-child { margin-right: 0; }
 
   ${props => props.highlight && css`
-    & div { background-color: #00f; }
+    & div { background-color: ${({ theme }) => theme.color.brand}; }
   `}
 `;
 
@@ -23,9 +23,11 @@ const MorseUnit = styled.div`
   display: inline-block;
   width: 1em;
   height: 1em;
+  margin: 1em 0;
   margin-right: 1em;
   border-radius: 100%;
-  background-color: #363636;
+  background-color: ${({ theme }) => theme.color.black};
+  transition: ${({ theme }) => theme.transition('background')};
 
   &:last-child { margin-right: 0; }
 
@@ -51,12 +53,13 @@ const MorseBreak = styled(MorseUnit)`
     left: 0.25em;
     width: calc(100% - 0.5em);
     height: calc(100% - 0.5em);
-    background-color: #eee;
+    background-color: currentColor;
+    opacity: 0.1;
   }
 `;
 
-const Morse = ({ morse, highlight }) =>
-  <div>
+const Morse = ({ morse, highlight, dispatch }) =>
+  <div style={{ display: 'inline-block', maxWidth: '60em' }}>
     {morse.map(entity => {
       switch (entity.type) {
         case 'break':
@@ -65,15 +68,16 @@ const Morse = ({ morse, highlight }) =>
         case 'char':
           const units = entity.code.split('');
           return (
-            <MorseChar key={entity.id} highlight={entity.id === highlight}>
+            <MorseChar
+              key={entity.id}
+              highlight={entity.id === highlight}
+              onMouseEnter={() => dispatch(highlightId(entity.id))}
+              onMouseLeave={() => dispatch(resetHighlight())}>
               {units.map((unit, i) =>
                 <MorseUnit key={entity.id + i} unit={unit} />,
               )}
             </MorseChar>
           );
-        // return units.map((unit, i) =>
-        //   <MorseUnit key={entity.id + i} unit={unit} />,
-        // );
 
         default:
           return null;

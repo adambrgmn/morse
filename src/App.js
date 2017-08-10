@@ -10,10 +10,13 @@ import Listen from './components/Listen';
 
 const GridContainer = styled.div`
   width: 100%;
+  height: 100vh;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: auto auto;
+  grid-template-rows: auto 1fr 1fr;
   align-items: center;
+  font-family: ${({ theme }) => theme.font.family};
+  color: ${({ theme }) => theme.color.black};
 `;
 
 const HeaderContainer = styled.header`
@@ -29,17 +32,32 @@ const ButtonContainer = styled.section`
 `;
 
 const MorseContainer = styled.section`
-  grid-column: 1 / span 2;
+  position: relative;
+  grid-column: 1 / span 4;
   grid-row: 2;
-  align-self: start;
+  align-self: end;
+  width: 100%;
   padding: 1rem;
+  text-align: center;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 37.5%;
+    width: 25%;
+    height: 3px;
+    background-color: ${({ theme }) => theme.color.black};
+  }
 `;
 
 const TranslationContainer = styled.section`
-  grid-column: 3 / span 2;
-  grid-row: 2;
+  grid-column: 1 / span 4;
+  grid-row: 3;
   align-self: start;
+  width: 100%;
   padding: 1rem;
+  text-align: center;
 `;
 
 class App extends Component {

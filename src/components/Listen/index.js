@@ -1,8 +1,15 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { cond, equals, always, T } from 'ramda';
+import { pipe, cond, equals, and, length, match, always, T } from 'ramda';
 
-import { newLong, newShort, newChar, newWord, back } from '../../reducer';
+import {
+  newLong,
+  newShort,
+  newChar,
+  newCharBreak,
+  newWordBreak,
+  back,
+} from '../../reducer';
 
 class Listen extends Component {
   componentDidMount() {
@@ -19,14 +26,15 @@ class Listen extends Component {
     const getAction = cond([
       [equals('-'), always(newLong)],
       [equals('.'), always(newShort)],
-      [equals(' '), always(newChar)],
-      [equals('  '), always(newWord)],
+      [equals(' '), always(newCharBreak)],
+      [equals('  '), always(newWordBreak)],
       [equals('Backspace'), always(back)],
+      [and(match(/^[a-z]{1}$/), pipe(length, equals(1))), always(newChar)],
       [T, always(null)],
     ]);
 
     const action = getAction(key);
-    if (action != null) this.props.dispatch(action());
+    if (action != null) this.props.dispatch(action(key));
   };
 
   render() {
