@@ -1,4 +1,4 @@
-import { toChar, toMorse } from './translationMap';
+import { toChar, toMorse } from '../translationMap';
 
 describe('Util: translationMap.toChar()', () => {
   it('should translate a morse string into a char', () => {
@@ -8,7 +8,7 @@ describe('Util: translationMap.toChar()', () => {
     expect(actual).toEqual(expected);
   })
 
-  it('should return null if not match found', () => {
+  it('should return "😢" if not match found', () => {
     const actual = toChar('---------');
     const expected = '😢';
 
@@ -24,7 +24,7 @@ describe('Util: translationMap.toMorse()', () => {
     expect(actual).toEqual(expected);
   })
 
-  it('should return null if not match found', () => {
+  it('should return "😢" if not match found', () => {
     const actual = toMorse('ö');
     const expected = '😢';
 

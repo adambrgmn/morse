@@ -1,5 +1,5 @@
 // @flow
-import R, { cond, equals, always, T } from 'ramda';
+import { pipe, find, contains, propOr } from 'ramda';
 
 const charMap = [
   ['.-', 'a'],
@@ -40,8 +40,8 @@ const charMap = [
   ['-----', '0'],
 ];
 
-export const toChar = (code: string) =>
-  R.pipe(R.find(R.pipe(R.head, R.equals(code))), R.propOr('😢', 1))(charMap);
+const translate = (idx: number): ((c: string) => string) =>
+  pipe(contains, fn => find(fn, charMap), propOr('😢', idx));
 
-export const toMorse = (char: string) =>
-  R.pipe(R.find(R.pipe(R.last, R.equals(char))), R.propOr('😢', 0))(charMap);
+export const toChar = translate(1);
+export const toMorse = translate(0);
