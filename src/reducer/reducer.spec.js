@@ -175,6 +175,13 @@ describe('Reducer: morse', () => {
     }
   });
 
+  it('should not do a thing on "BACK"-event if state is empty', () => {
+    const actual = morse([], { type: BACK });
+    const expected = [];
+
+    expect(actual).toEqual(expected);
+  });
+
   it('should clear all "CLEAR"-action', () => {
     const actual = morse(initialState, { type: CLEAR });
     const expected = [];

@@ -1,7 +1,9 @@
 // @flow
-import { pipe, find, contains, propOr } from 'ramda';
+import { pipe, find, contains, nth, ifElse, isNil, flip } from 'ramda';
 
-const charMap = [
+
+type Char = [string, string];
+const charMap: Char[] = [
   ['.-', 'a'],
   ['-...', 'b'],
   ['-.-.', 'c'],
@@ -40,8 +42,9 @@ const charMap = [
   ['-----', '0'],
 ];
 
+const findFlip = flip(find);
 const translate = (idx: number): ((c: string) => string) =>
-  pipe(contains, fn => find(fn, charMap), propOr('😢', idx));
+  pipe(contains, findFlip(charMap), ifElse(isNil, () => '😢', nth(idx)));
 
 export const toChar = translate(1);
 export const toMorse = translate(0);

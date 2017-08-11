@@ -1,5 +1,23 @@
 // @flow
-import R from 'ramda';
+import {
+  ifElse,
+  isEmpty,
+  T,
+  pipe,
+  last,
+  prop,
+  equals,
+  append,
+  over,
+  lensIndex,
+  lensProp,
+  cond,
+  flip,
+  concat,
+  identity,
+  slice,
+  init,
+} from 'ramda';
 import uuid from 'uuid/v1';
 
 import { toMorse } from '../utils/translationMap';
@@ -30,49 +48,47 @@ const initialState = [
 const createNewUnitObj = code => ({ id: uuid(), type: 'char', code });
 const createNewBreakObj = long => ({ id: uuid(), type: 'break', long });
 
-const lastIsBreak = R.pipe(
-  R.last,
-  R.propOr('break', 'type'),
-  R.equals('break'),
+const lastIsBreak = ifElse(
+  isEmpty,
+  T,
+  pipe(last, prop('type'), equals('break')),
 );
-const lastIsEmpty = R.pipe(R.last, R.prop('code'), R.isEmpty);
 
-const addNewUnitObj = char => R.append(createNewUnitObj(char));
-const updateLastUnit = fn =>
-  R.over(R.lensIndex(-1), R.over(R.lensProp('code'), fn));
+const lastIsEmpty = pipe(last, prop('code'), isEmpty);
+
+const addNewUnitObj = char => append(createNewUnitObj(char));
+const updateLastUnit = fn => over(lensIndex(-1), over(lensProp('code'), fn));
 
 const addUnit = unit =>
-  R.cond([
+  cond([
     [lastIsBreak, addNewUnitObj(unit)],
-    [R.T, updateLastUnit(R.flip(R.concat)(unit))],
+    [T, updateLastUnit(flip(concat)(unit))],
   ]);
 
-const addNewCharBreakObj = arr => R.append(createNewBreakObj(false), arr);
-const updateLastCharBreak = R.over(
-  R.lensIndex(-1),
-  R.over(R.lensProp('long'), R.T),
-);
+const addNewCharBreakObj = arr => append(createNewBreakObj(false), arr);
+const updateLastCharBreak = over(lensIndex(-1), over(lensProp('long'), T));
 
-const addCharBreak = R.cond([
-  [R.isEmpty, R.identity],
+const addCharBreak = cond([
+  [isEmpty, identity],
   [lastIsBreak, updateLastCharBreak],
-  [R.T, addNewCharBreakObj],
+  [T, addNewCharBreakObj],
 ]);
 
-const backLastChar = R.over(
-  R.lensIndex(-1),
-  R.over(R.lensProp('code'), R.slice(0, -1)),
-);
+const backLastChar = over(lensIndex(-1), over(lensProp('code'), slice(0, -1)));
 
-const backspace = R.pipe(
-  R.cond([[lastIsBreak, R.init], [R.T, backLastChar]]),
-  R.cond([[lastIsEmpty, R.init], [R.T, R.identity]]),
+const backspace = ifElse(
+  isEmpty,
+  identity,
+  pipe(
+    cond([[lastIsBreak, init], [T, backLastChar]]),
+    cond([[lastIsEmpty, init], [T, identity]]),
+  ),
 );
 
 const addChar = char =>
-  R.cond([
+  cond([
     [lastIsBreak, addNewUnitObj(toMorse(char))],
-    [R.T, R.pipe(addNewCharBreakObj, addNewUnitObj(toMorse(char)))],
+    [T, pipe(addNewCharBreakObj, addNewUnitObj(toMorse(char)))],
   ]);
 
 export default (state: State = initialState, action: Action) => {
@@ -91,7 +107,7 @@ export default (state: State = initialState, action: Action) => {
       return addCharBreak(state);
 
     case NEW_WORD_BREAK:
-      return addCharBreak(addCharBreak(state));
+      return pipe(addCharBreak, addCharBreak)(state);
 
     case BACK:
       return backspace(state);
