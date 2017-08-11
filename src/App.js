@@ -17,6 +17,7 @@ const GridContainer = styled.div`
   align-items: center;
   font-family: ${({ theme }) => theme.font.family};
   color: ${({ theme }) => theme.color.black};
+  background-color: ${({ theme }) => theme.color.bg};
 `;
 
 const HeaderContainer = styled.header`
@@ -43,11 +44,11 @@ const MorseContainer = styled.section`
   &::after {
     content: '';
     position: absolute;
-    top: 100%;
+    top: calc(100% - 3px);
     left: 37.5%;
     width: 25%;
     height: 3px;
-    background-color: ${({ theme }) => theme.color.black};
+    background-color: ${({ theme }) => theme.color.brand};
   }
 `;
 

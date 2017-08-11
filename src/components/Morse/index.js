@@ -13,7 +13,7 @@ const MorseChar = styled.div`
   &:last-child { margin-right: 0; }
 
   ${props => props.highlight && css`
-    & div { background-color: ${({ theme }) => theme.color.brand}; }
+    & div { background-color: ${({ theme }) => theme.color.black}; }
   `}
 `;
 
@@ -26,7 +26,7 @@ const MorseUnit = styled.div`
   margin: 1em 0;
   margin-right: 1em;
   border-radius: 100%;
-  background-color: ${({ theme }) => theme.color.black};
+  background-color: ${({ theme }) => theme.color.brand};
   transition: ${({ theme }) => theme.transition('background')};
 
   &:last-child { margin-right: 0; }
@@ -53,7 +53,7 @@ const MorseBreak = styled(MorseUnit)`
     left: 0.25em;
     width: calc(100% - 0.5em);
     height: calc(100% - 0.5em);
-    background-color: currentColor;
+    background-color: ${({ theme }) => theme.color.brand};
     opacity: 0.1;
   }
 `;

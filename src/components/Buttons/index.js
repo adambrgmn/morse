@@ -27,8 +27,10 @@ const Button = styled.button`
   transition: ${({ theme }) => theme.transition('color')};
   cursor: pointer;
 
-  &:hover {
+  &:hover,
+  &:focus {
     color: ${({ theme }) => theme.color.brand};
+    outline: none;
   }
 `;
 
@@ -38,7 +40,8 @@ const ButtonMorse = styled(Button)`
   background-color: ${({ theme }) => theme.color.black};
   transition-property: background;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: ${({ theme }) => theme.color.brand};
   }
 

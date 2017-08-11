@@ -10,13 +10,14 @@ const TranslationContainer = styled.p`
   font-family: ${props => props.theme.font};
   line-height: 1;
   letter-spacing: 0.1em;
+  color: ${({ theme }) => theme.color.brand};
 `;
 
 const TranslationChar = styled.span`
   cursor: default;
   transition: ${({ theme }) => theme.transition('color')};
 
-  ${props => props.highlight && css`color: ${props.theme.color.brand};`}
+  ${props => props.highlight && css`color: ${props.theme.color.black};`}
 `;
 
 const Translation = ({ morse, highlight, dispatch }) =>

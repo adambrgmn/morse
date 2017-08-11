@@ -4,7 +4,8 @@ export default {
   },
   color: {
     black: '#363636',
-    brand: '#0000ff',
+    brand: '#dd0000',
+    bg: '#e6f1e2',
   },
   transition: (
     prop = 'all',
