@@ -48,7 +48,7 @@ const MorseContainer = styled.section`
     left: 37.5%;
     width: 25%;
     height: 3px;
-    background-color: ${({ theme }) => theme.color.brand};
+    background-color: ${({ theme }) => theme.color.black};
   }
 `;
 

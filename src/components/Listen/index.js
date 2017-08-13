@@ -1,13 +1,12 @@
 import { Component } from 'react';
 import { connect } from 'react-redux';
-import { pipe, cond, equals, and, length, match, always, T } from 'ramda';
+import { pipe, cond, always, T, propEq, prop, test } from 'ramda';
 
 import {
   newLong,
   newShort,
   newChar,
   newCharBreak,
-  newWordBreak,
   back,
 } from '../../reducer';
 
@@ -21,20 +20,23 @@ class Listen extends Component {
   }
 
   dispatch = (e: KeyboardEvent) => {
-    const key = e.shiftKey && e.key === ' ' ? '  ' : e.key;
+    const keyEq = propEq('key');
+    const keyMatch = regExp => pipe(prop('key'), test(regExp));
 
     const getAction = cond([
-      [equals('-'), always(newLong)],
-      [equals('.'), always(newShort)],
-      [equals(' '), always(newCharBreak)],
-      [equals('  '), always(newWordBreak)],
-      [equals('Backspace'), always(back)],
-      [and(match(/^[a-z]{1}$/), pipe(length, equals(1))), always(newChar)],
+      [keyEq('-'), always(newLong)],
+      [keyEq('.'), always(newShort)],
+      [keyEq(' '), always(newCharBreak)],
+      [keyEq('Backspace'), always(back)],
+      [keyMatch(/^[a-z]$/), always(newChar)],
       [T, always(null)],
     ]);
 
-    const action = getAction(key);
-    if (action != null) this.props.dispatch(action(key));
+    const action = getAction(e);
+
+    if (action != null) {
+      this.props.dispatch(action(e.key));
+    }
   };
 
   render() {

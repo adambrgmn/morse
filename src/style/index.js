@@ -6,6 +6,8 @@ export default {
     black: '#363636',
     brand: '#dd0000',
     bg: '#e6f1e2',
+    morse: '#363636',
+    translation: '#363636',
   },
   transition: (
     prop = 'all',
